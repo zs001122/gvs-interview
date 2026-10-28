@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, message, Tag, Modal, Form, Input, Select, Card, Typography, Popconfirm, Tooltip } from 'antd';
+import { Table, Button, Space, message, Tag, Modal, Form, Input, Select, Popconfirm, Tooltip } from 'antd';
 import { PlusOutlined, ReloadOutlined, EditOutlined, DeleteOutlined, StopOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import request from '../../utils/request';
-
-const { Title, Text } = Typography;
+import PageHeader from '../../components/ui/PageHeader';
 
 interface User {
   id: string;
@@ -209,35 +208,20 @@ const UsersList: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <div>
-          <Title level={2} style={{ margin: 0 }}>用户管理</Title>
-          <Text type="secondary">管理系统用户及权限分配</Text>
-        </div>
-        <Space>
-          {selectedRowKeys.length > 0 && (
-            <>
-              <span style={{ lineHeight: '32px' }}>已选 {selectedRowKeys.length} 项</span>
-              <Button danger onClick={handleBatchDelete}>批量删除</Button>
-              <Button onClick={() => setSelectedRowKeys([])}>取消选择</Button>
-            </>
-          )}
-          <Button icon={<ReloadOutlined />} onClick={fetchUsers}>刷新</Button>
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>新增用户</Button>
-        </Space>
-      </div>
+      <PageHeader title="用户与权限" description="管理团队成员账号、角色和启用状态，维护清晰的协作边界。" extra={<Space wrap>{selectedRowKeys.length > 0 && <><span className="muted-text">已选 {selectedRowKeys.length} 项</span><Button danger onClick={handleBatchDelete}>批量删除</Button><Button onClick={() => setSelectedRowKeys([])}>取消选择</Button></>}<Button icon={<ReloadOutlined />} onClick={fetchUsers}>刷新</Button><Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>新增用户</Button></Space>} />
 
-      <Table
+      <div className="table-shell"><Table
         columns={columns}
         dataSource={data}
         loading={loading}
         rowKey="id"
+        scroll={{ x: 1000 }}
         pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total) => `共 ${total} 条` }}
         rowSelection={{
           selectedRowKeys,
           onChange: (keys) => setSelectedRowKeys(keys),
         }}
-      />
+      /></div>
 
       <Modal
         title={isEditModal ? '编辑用户' : '新增用户'}

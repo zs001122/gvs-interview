@@ -4,6 +4,8 @@ import { PlusOutlined, DeleteOutlined, PlayCircleOutlined, EyeOutlined, StopOutl
 import request from '../../utils/request';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import PageHeader from '../../components/ui/PageHeader';
+import FilterBar from '../../components/ui/FilterBar';
 
 const { Text } = Typography;
 
@@ -440,44 +442,22 @@ const InterviewsList: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-        <Space>
-          <Select
-            placeholder="筛选状态"
-            allowClear
-            value={statusFilter}
-            onChange={(val) => setStatusFilter(val)}
-            style={{ width: 160 }}
-            options={[
-              { value: 'scheduled', label: '待面试' },
-              { value: 'in_progress', label: '面试中' },
-              { value: 'completed', label: '已完成' },
-              { value: 'cancelled', label: '已取消' },
-            ]}
-          />
-          {selectedRowKeys.length > 0 && canDeleteInterview && (
-            <>
-              <span style={{ lineHeight: '32px' }}>已选 {selectedRowKeys.length} 项</span>
-              <Button danger onClick={handleBatchDelete}>批量删除</Button>
-              <Button onClick={() => setSelectedRowKeys([])}>取消选择</Button>
-            </>
-          )}
-        </Space>
-        {(user?.role === 'admin' || user?.role === 'hr') && (
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenSelectResume}>安排面试</Button>
-        )}
-      </div>
-      <Table
+      <PageHeader title="面试管理" description="安排面试日程、协同完成评分，并跟踪每位候选人的面试结论。" extra={(user?.role === 'admin' || user?.role === 'hr') && <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenSelectResume}>安排面试</Button>} />
+      <FilterBar actions={selectedRowKeys.length > 0 && canDeleteInterview ? <Space><span className="muted-text">已选 {selectedRowKeys.length} 项</span><Button danger onClick={handleBatchDelete}>批量删除</Button><Button onClick={() => setSelectedRowKeys([])}>取消选择</Button></Space> : undefined}>
+        <Select placeholder="筛选状态" allowClear value={statusFilter} onChange={(val) => setStatusFilter(val)} style={{ width: 160 }} options={[{ value: 'scheduled', label: '待面试' }, { value: 'in_progress', label: '面试中' }, { value: 'completed', label: '已完成' }, { value: 'cancelled', label: '已取消' }]} />
+      </FilterBar>
+      <div className="table-shell"><Table
         columns={columns}
         dataSource={filteredData}
         loading={loading}
         rowKey="id"
+        scroll={{ x: 1100 }}
         pagination={{ pageSize: 10, showSizeChanger: true }}
         rowSelection={{
           selectedRowKeys,
           onChange: (keys) => setSelectedRowKeys(keys),
         }}
-      />
+      /></div>
 
       {/* 取消面试弹窗 */}
       <Modal

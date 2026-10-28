@@ -917,9 +917,8 @@ const InterviewScore: React.FC = () => {
   );
 
   return (
-    <div style={{ height: isFullscreen ? '100vh' : 'calc(100vh - 100px)', display: 'flex', gap: '24px' }}>
-      {/* Left: Resume Preview */}
-      <div style={{ flex: 1, background: '#fff', borderRadius: '16px', border: '1px solid #E2E8F0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+    <div className={`interview-workspace${isFullscreen ? ' interview-workspace--fullscreen' : ''}`}>
+      <div className="interview-resume-panel">
         <div style={{ padding: '12px 24px', borderBottom: '1px solid #E2E8F0', background: '#F8FAFC', display: 'flex', justifyContent: 'space-between' }}>
           <Text strong>简历预览: {interview.resume?.candidate_name}</Text>
           <Button type="link" icon={<DownloadOutlined />} href={fileUrl} download>下载</Button>
@@ -945,7 +944,7 @@ const InterviewScore: React.FC = () => {
       </div>
 
       {/* Right: Interview Questions & Scoring */}
-      <div id="questions-container" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div id="questions-container" className="interview-score-panel">
         {/* 实时转写显示栏 */}
         {realtimeTranscriptBar}
         

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Button, Tag, Space, message, Typography, Empty, Spin } from 'antd';
+import { Card, Table, Button, Tag, Space, message, Empty, Spin } from 'antd';
 import { EyeOutlined, ClockCircleOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import request from '../../utils/request';
-
-const { Title, Text } = Typography;
+import PageHeader from '../../components/ui/PageHeader';
 
 interface PendingReview {
   review_id: string;
@@ -97,10 +96,7 @@ const MyReviews: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 24 }}>
-        <Title level={2} style={{ margin: 0 }}>我的待评审</Title>
-        <Text type="secondary">您被指派的待评审简历列表</Text>
-      </div>
+      <PageHeader title="我的待评审" description="查看指派给您的候选人，结合简历与 AI 初筛结果提交专业评审。" />
 
       <Card>
         {pendingReviews.length === 0 ? (

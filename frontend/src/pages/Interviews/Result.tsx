@@ -6,6 +6,7 @@ import { DownloadOutlined, FileMarkdownOutlined, FilePdfOutlined, DownOutlined }
 import request from '../../utils/request';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import PageHeader from '../../components/ui/PageHeader';
 // @ts-ignore
 import html2pdf from 'html2pdf.js';
 
@@ -224,7 +225,9 @@ const InterviewResultPage: React.FC = () => {
   const isPendingReview = interview.status !== 'completed' && interview.result === 'pending';
 
   return (
-    <Card id="interview-result-content">
+    <div className="interview-result-page">
+      <PageHeader title="面试结果报告" description="汇总逐题评分、面试官评语与 AI 综合分析，确认最终招聘决策。" onBack={() => navigate('/interviews')} />
+      <Card id="interview-result-content" className="surface-panel">
       {isPendingReview ? (
          // Pending review state
          <>
@@ -371,7 +374,8 @@ const InterviewResultPage: React.FC = () => {
           </List.Item>
         )}
       />
-    </Card>
+      </Card>
+    </div>
   );
 };
 

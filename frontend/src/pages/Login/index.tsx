@@ -1,38 +1,28 @@
 import React from 'react';
-import { Form, Input, Button, Card, Typography, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Button, Form, Input, message } from 'antd';
+import { CheckCircleOutlined, LockOutlined, SafetyCertificateOutlined, ThunderboltOutlined, UserOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import request from '../../utils/request';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
-
-const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
   const { login, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  useLocation();
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      navigate('/dashboard', { replace: true });
-    }
+    if (!authLoading && isAuthenticated) navigate('/dashboard', { replace: true });
   }, [authLoading, isAuthenticated, navigate]);
 
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      // Use URLSearchParams to send form data as application/x-www-form-urlencoded
       const formData = new URLSearchParams();
       formData.append('username', values.email);
       formData.append('password', values.password);
-
       const res = await request.post('/auth/token', formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
-      
       await login((res as any).access_token);
       message.success('登录成功');
       navigate('/dashboard', { replace: true });
@@ -44,51 +34,37 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      minHeight: '100vh',
-      background: '#f0f2f5' 
-    }}>
-      <Card style={{ width: 400, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-        <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <Title level={3}>AI 智能面试系统</Title>
-          <Text type="secondary">请登录您的账号</Text>
-        </div>
-        
-        <Form
-          name="login"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          size="large"
-        >
-          <Form.Item
-            name="email"
-            rules={[{ required: true, message: '请输入邮箱!' }]}
-          >
-            <Input prefix={<UserOutlined />} placeholder="邮箱 (admin@example.com)" />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: '请输入密码!' }]}
-          >
-            <Input.Password prefix={<LockOutlined />} placeholder="密码 (admin123)" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={loading}>
-              登录
-            </Button>
-          </Form.Item>
-          
-          <div style={{ textAlign: 'center' }}>
-             <Text type="secondary" style={{ fontSize: 12 }}>默认账号: admin@example.com / admin123</Text>
+    <main className="login-shell">
+      <section className="login-intro">
+        <div className="brand login-brand"><span className="brand__mark">AI</span><span className="brand__name">Interview</span></div>
+        <div className="login-intro__content">
+          <div className="login-kicker"><ThunderboltOutlined /> 智能招聘工作台</div>
+          <h1>让人才决策，<br /><span>更清晰。</span></h1>
+          <p>将简历筛选、协同面试与招聘分析连接在同一个工作空间，让团队专注于真正重要的判断。</p>
+          <div className="login-benefits">
+            <div><CheckCircleOutlined /><span><strong>AI 辅助人才洞察</strong><small>从简历解析到面试总结，信息始终连贯</small></span></div>
+            <div><SafetyCertificateOutlined /><span><strong>安全可靠的团队协作</strong><small>清晰的角色分工与完整招聘流程</small></span></div>
           </div>
-        </Form>
-      </Card>
-    </div>
+        </div>
+        <div className="login-intro__footer">AI Interview · 智能招聘管理系统</div>
+      </section>
+      <section className="login-panel">
+        <div className="login-card">
+          <div className="login-card__heading"><span className="login-card__eyebrow">WELCOME BACK</span><h2>欢迎回来</h2><p>登录您的账号，继续今天的招聘工作</p></div>
+          <Form name="login" onFinish={onFinish} size="large" layout="vertical" requiredMark={false}>
+            <Form.Item name="email" label="工作邮箱" rules={[{ required: true, message: '请输入邮箱' }]}>
+              <Input prefix={<UserOutlined />} placeholder="admin@example.com" autoComplete="username" />
+            </Form.Item>
+            <Form.Item name="password" label="密码" rules={[{ required: true, message: '请输入密码' }]}>
+              <Input.Password prefix={<LockOutlined />} placeholder="请输入密码" autoComplete="current-password" />
+            </Form.Item>
+            <Button type="primary" htmlType="submit" block loading={loading} className="login-submit">登录工作台</Button>
+          </Form>
+          <div className="login-credentials"><span>演示账号</span><code>admin@example.com</code><code>admin123</code></div>
+          <div className="login-security"><SafetyCertificateOutlined /> 登录即表示您同意遵守企业的数据安全规范</div>
+        </div>
+      </section>
+    </main>
   );
 };
 

@@ -11,6 +11,7 @@ import {
   TrophyOutlined, RiseOutlined, FallOutlined
 } from '@ant-design/icons';
 import request from '../../utils/request';
+import PageHeader from '../../components/ui/PageHeader';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
@@ -350,48 +351,19 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 32 }}>
-        <Title level={2} style={{ margin: 0, fontWeight: 700 }}>数据分析</Title>
-        <Text type="secondary">招聘数据概览与深度分析</Text>
-      </div>
+      <PageHeader eyebrow="RECRUITMENT OVERVIEW" title="招聘数据概览" description="聚合招聘进展、转化效率与团队表现，帮助快速做出下一步决策。" />
 
-      <Row gutter={[24, 24]}>
+      <div className="stat-grid">
         {stats.map((stat, index) => (
-          <Col xs={24} sm={12} lg={6} key={index}>
-            <Card bordered={false} hoverable style={{ height: '100%', border: '1px solid #E2E8F0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
-                  <Text type="secondary" style={{ fontSize: '13px', fontWeight: 500 }}>{stat.title}</Text>
-                  <div style={{ fontSize: '32px', fontWeight: 700, margin: '8px 0', lineHeight: 1, color: '#0F172A' }}>
-                    {stat.value}
-                  </div>
-                  <div style={{ 
-                    fontSize: '13px', 
-                    fontWeight: 500,
-                    display: 'flex', 
-                    alignItems: 'center',
-                    color: stat.trend > 0 ? '#10B981' : (stat.trend < 0 ? '#EF4444' : '#64748B')
-                  }}>
-                    {stat.trend > 0 ? <ArrowUpOutlined style={{ marginRight: 4 }} /> : (stat.trend < 0 ? <ArrowDownOutlined style={{ marginRight: 4 }} /> : null)}
-                    {stat.trend !== 0 ? `${Math.abs(stat.trend)} 本周新增` : '无变化'}
-                  </div>
-                </div>
-                <div style={{ 
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px', 
-                  background: stat.color,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  {stat.icon}
-                </div>
-              </div>
-            </Card>
-          </Col>
+          <div className="stat-card" key={index}>
+            <div className="stat-card__top"><span>{stat.title}</span><span className="stat-card__icon" style={{ background: stat.color }}>{stat.icon}</span></div>
+            <div className="stat-card__value">{stat.value}</div>
+            <div className="stat-card__hint" style={{ color: stat.trend > 0 ? '#12805C' : stat.trend < 0 ? '#D92D20' : '#98A2B3' }}>
+              {stat.trend > 0 ? <ArrowUpOutlined /> : stat.trend < 0 ? <ArrowDownOutlined /> : null} {stat.trend !== 0 ? `${Math.abs(stat.trend)} 本周新增` : '较上周无变化'}
+            </div>
+          </div>
         ))}
-      </Row>
+      </div>
 
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
         <Col xs={24} lg={8}>
@@ -530,6 +502,7 @@ const Dashboard: React.FC = () => {
               dataSource={positions} 
               columns={positionColumns} 
               rowKey="id"
+              scroll={{ x: 900 }}
               pagination={{ pageSize: 10 }}
               locale={{ emptyText: '暂无岗位数据' }}
             />
@@ -541,6 +514,7 @@ const Dashboard: React.FC = () => {
               dataSource={interviewers} 
               columns={interviewerColumns} 
               rowKey="id"
+              scroll={{ x: 900 }}
               pagination={{ pageSize: 10 }}
               locale={{ emptyText: '暂无面试官数据' }}
             />

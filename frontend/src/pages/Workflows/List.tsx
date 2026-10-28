@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Card, Button, Space, Typography, message, Modal, Form, Input, Select,
-  Table, Tag, Popconfirm, Tooltip
-} from 'antd';
-import {
-  PlusOutlined, PlayCircleOutlined, DeleteOutlined, EditOutlined,
-  CopyOutlined, CheckCircleOutlined, SettingOutlined
-} from '@ant-design/icons';
+import { Button, Space, message, Modal, Form, Input, Select, Table, Tag, Popconfirm, Tooltip } from 'antd';
+import { PlusOutlined, PlayCircleOutlined, DeleteOutlined, EditOutlined, CopyOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import request from '../../utils/request';
 import { useAuth } from '../../contexts/AuthContext';
+import PageHeader from '../../components/ui/PageHeader';
 
-const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Workflow {
@@ -241,28 +235,17 @@ const WorkflowsList: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 24 }}>
-        <Title level={2} style={{ margin: 0 }}>工作流编排</Title>
-        <Text type="secondary">可视化设计和编排自动化工作流</Text>
-      </div>
-
-      <Card
-        extra={
-          isHR && (
-            <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-              创建工作流
-            </Button>
-          )
-        }
-      >
+      <PageHeader title="工作流编排" description="通过可视化节点连接 AI、条件与工具，构建可复用的招聘自动化流程。" extra={isHR && <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>创建工作流</Button>} />
+      <div className="table-shell">
         <Table
           columns={columns}
           dataSource={workflows}
           rowKey="id"
           loading={loading}
+          scroll={{ x: 900 }}
           pagination={{ pageSize: 10 }}
         />
-      </Card>
+      </div>
 
       <Modal
         title="创建工作流"

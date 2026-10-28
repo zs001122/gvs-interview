@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, message, Modal, Form, Input, Select, Tag, Tooltip, Typography, Drawer, Descriptions, Divider, Progress, Badge, Spin, Popconfirm } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, GlobalOutlined, StopOutlined, CopyOutlined, RobotOutlined, ThunderboltOutlined, DeleteFilled } from '@ant-design/icons';
+import { Table, Button, Space, message, Modal, Form, Input, Select, Tag, Tooltip, Typography, Drawer, Descriptions, Divider, Progress, Badge } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, GlobalOutlined, StopOutlined, CopyOutlined, RobotOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import request from '../../utils/request';
 import JDGeneratorModal from '../../components/JDGeneratorModal';
+import PageHeader from '../../components/ui/PageHeader';
+import FilterBar from '../../components/ui/FilterBar';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -394,54 +396,32 @@ const PositionsList: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <div>
-          <Title level={2} style={{ margin: 0, fontWeight: 700 }}>岗位管理</Title>
-          <Text type="secondary">管理企业的招聘岗位信息</Text>
-        </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} size="large" style={{ borderRadius: '8px' }}>新增岗位</Button>
-      </div>
+      <PageHeader
+        eyebrow="TALENT ACQUISITION"
+        title="岗位管理"
+        description="统一维护招聘岗位、人才要求与发布状态，跟踪每个岗位的招聘进展。"
+        extra={<Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} size="large">新增岗位</Button>}
+      />
       
-      <div style={{ marginBottom: 24, padding: '24px', background: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <Input 
-              placeholder="搜索岗位名称" 
-              prefix={<EyeOutlined style={{ color: '#94A3B8' }} />} 
-              style={{ width: 300 }} 
-              allowClear
-              onChange={(e) => setSearchTitle(e.target.value)}
-          />
-          <Select
-              placeholder="岗位状态"
-              style={{ width: 150 }}
-              allowClear
-              onChange={(value) => setSearchStatus(value)}
-          >
-              <Select.Option value="open">待发布</Select.Option>
-              <Select.Option value="published">招聘中</Select.Option>
-              <Select.Option value="closed">已关闭</Select.Option>
-          </Select>
-          {selectedRowKeys.length > 0 && (
-            <Space>
-              <span style={{ color: '#64748B' }}>已选 {selectedRowKeys.length} 项</span>
-              <Button onClick={() => handleBatchPublish(true)} type="primary" ghost>批量发布</Button>
-              <Button onClick={() => handleBatchPublish(false)}>批量下架</Button>
-              <Button danger onClick={handleBatchDelete}>批量删除</Button>
-              <Button onClick={() => setSelectedRowKeys([])}>取消选择</Button>
-            </Space>
-          )}
-      </div>
+      <FilterBar actions={selectedRowKeys.length > 0 ? <Space wrap><span className="muted-text">已选 {selectedRowKeys.length} 项</span><Button onClick={() => handleBatchPublish(true)} type="primary" ghost>批量发布</Button><Button onClick={() => handleBatchPublish(false)}>批量下架</Button><Button danger onClick={handleBatchDelete}>批量删除</Button><Button onClick={() => setSelectedRowKeys([])}>取消选择</Button></Space> : undefined}>
+        <Input placeholder="搜索岗位名称" style={{ width: 280 }} allowClear onChange={(e) => setSearchTitle(e.target.value)} />
+        <Select placeholder="岗位状态" style={{ width: 150 }} allowClear onChange={(value) => setSearchStatus(value)}>
+          <Select.Option value="open">待发布</Select.Option><Select.Option value="published">招聘中</Select.Option><Select.Option value="closed">已关闭</Select.Option>
+        </Select>
+      </FilterBar>
       
-      <Table 
+      <div className="table-shell"><Table
         columns={columns} 
         dataSource={data} 
         loading={loading} 
         rowKey="id" 
+        scroll={{ x: 1050 }}
         pagination={{ pageSize: 10, showSizeChanger: true }}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys,
         }}
-      />
+      /></div>
 
       <Modal
         title={editingId ? '编辑岗位' : '新增岗位'}

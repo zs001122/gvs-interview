@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Button, Card, Form, Input, Space, Typography, message, Result, Switch, InputNumber, Divider, Tabs, Alert, Tag, Tooltip } from 'antd';
 import request from '../../utils/request';
 import { useAuth } from '../../contexts/AuthContext';
+import PageHeader from '../../components/ui/PageHeader';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 type SystemSettings = {
   llm_base_url?: string | null;
@@ -396,11 +397,8 @@ const SystemSettingsPage: React.FC = () => {
   }));
 
   return (
-    <div>
-      <div style={{ marginBottom: 32 }}>
-        <Title level={2} style={{ margin: 0 }}>系统设置</Title>
-        <Text type="secondary">配置 AI 模型、邮件服务和提示词参数（仅管理员）</Text>
-      </div>
+    <div className="settings-page">
+      <PageHeader title="系统设置" description="集中配置 AI 模型、邮件服务和提示词参数，变更仅对管理员开放。" />
 
       <Card
         title="模型配置"

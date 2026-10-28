@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { PlayCircleOutlined, SendOutlined, ClockCircleOutlined, CheckCircleOutlined, FlagOutlined, FlagFilled, UserOutlined, MailOutlined, LoginOutlined, TrophyOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import request from '../../utils/request';
 import CodeEditor from '../../components/CodeEditor';
+import PublicLayout from '../../components/PublicLayout';
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
@@ -308,11 +309,7 @@ const PublicCodingTest: React.FC = () => {
   }, [test?.questions, answers, markedQuestions]);
 
   if (loading && !test) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Spin size="large" />
-      </div>
-    );
+    return <PublicLayout focus><div className="public-state"><Spin size="large" /></div></PublicLayout>;
   }
 
   if (!test) return null;
@@ -322,8 +319,8 @@ const PublicCodingTest: React.FC = () => {
 
   if (showResult && submission) {
     return (
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '24px 16px' }}>
-        <Card style={{ borderRadius: 16, textAlign: 'center' }}>
+      <PublicLayout focus>
+        <Card className="public-card exam-result-card">
           <div style={{ marginBottom: 32 }}>
             {submission.passed ? (
               <TrophyOutlined style={{ fontSize: 80, color: '#52c41a' }} />
@@ -386,14 +383,14 @@ const PublicCodingTest: React.FC = () => {
             </Card>
           )}
         </Card>
-      </div>
+      </PublicLayout>
     );
   }
 
   if (!started) {
     return (
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '24px 16px' }}>
-        <Card style={{ borderRadius: 16 }}>
+      <PublicLayout focus>
+        <Card className="public-card exam-start-card">
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <Title level={2} style={{ marginBottom: 8 }}>{test.title}</Title>
             <Space>
@@ -451,7 +448,7 @@ const PublicCodingTest: React.FC = () => {
             </Form.Item>
           </Form>
         </Card>
-      </div>
+      </PublicLayout>
     );
   }
 
@@ -470,15 +467,9 @@ const PublicCodingTest: React.FC = () => {
           border: isMarked ? '2px solid #faad14' : undefined,
           boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         }}
-        styles={{
-          header: {
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            borderRadius: '14px 14px 0 0',
-            padding: '12px 20px',
-          },
-        }}
+        styles={{ header: { background: '#F8FAFD', borderRadius: '14px 14px 0 0', padding: '12px 20px' } }}
         title={
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#fff' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#182230' }}>
             <Space>
               <span style={{ fontSize: 16, fontWeight: 600 }}>第 {index + 1} 题</span>
               {q.is_multiple && <Tag color="gold">多选</Tag>}
@@ -487,7 +478,7 @@ const PublicCodingTest: React.FC = () => {
             <Tooltip title={isMarked ? '取消标记' : '标记此题'}>
               <Button
                 type="text"
-                icon={isMarked ? <FlagFilled style={{ color: '#faad14' }} /> : <FlagOutlined style={{ color: '#fff' }} />}
+                icon={isMarked ? <FlagFilled style={{ color: '#faad14' }} /> : <FlagOutlined style={{ color: '#98A2B3' }} />}
                 onClick={() => toggleMark(q.id)}
               />
             </Tooltip>
@@ -652,8 +643,8 @@ const PublicCodingTest: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 16px' }}>
-      <Card style={{ borderRadius: 16 }}>
+    <PublicLayout focus wide>
+      <Card className="surface-panel exam-workspace">
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
@@ -739,13 +730,11 @@ const PublicCodingTest: React.FC = () => {
 
           {(testType === 'choice' || testType === 'essay') && (
             <>
-              <div style={{ display: 'flex', gap: 24 }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="exam-question-layout">
+                <div className="exam-question-list">
                   {(test?.questions || []).map((q: any, index: number) => renderQuestionCard(q, index))}
                 </div>
-                <div style={{ width: 240, flexShrink: 0, position: 'sticky', top: 16, alignSelf: 'flex-start', maxHeight: 'calc(100vh - 32px)', overflow: 'auto' }}>
-                  {renderAnswerSheet()}
-                </div>
+                <aside className="exam-answer-sheet">{renderAnswerSheet()}</aside>
               </div>
               
               <div style={{ textAlign: 'center', marginTop: 24, paddingTop: 24, borderTop: '1px solid #f0f0f0' }}>
@@ -767,7 +756,7 @@ const PublicCodingTest: React.FC = () => {
           )}
         </Space>
       </Card>
-    </div>
+    </PublicLayout>
   );
 };
 

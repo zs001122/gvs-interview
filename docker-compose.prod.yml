@@ -51,7 +51,7 @@ services:
     image: ai-interview-frontend:latest
     container_name: ai_interview_frontend
     ports:
-      - "80:80"
+      - "8081:80"
     depends_on:
       - backend
     restart: always

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   Card, Table, Button, Space, Tag, Modal, Form, Input, InputNumber, DatePicker,
-  Select, message, Popconfirm, Badge, Tooltip, Typography, Row, Col, Statistic,
+  Select, message, Popconfirm, Tooltip, Typography, Row, Col, Statistic,
   Drawer, Descriptions, Divider
 } from 'antd';
 import {
@@ -12,9 +12,11 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import request from '../../utils/request';
+import PageHeader from '../../components/ui/PageHeader';
+import FilterBar from '../../components/ui/FilterBar';
 import dayjs from 'dayjs';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -505,10 +507,7 @@ const OffersList: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 24 }}>
-        <Title level={2} style={{ margin: 0 }}>Offer管理</Title>
-        <Text type="secondary">管理候选人录用通知</Text>
-      </div>
+      <PageHeader title="Offer 管理" description="创建、发送并跟踪录用通知，集中管理候选人确认结果。" extra={<Button type="primary" icon={<PlusOutlined />} onClick={() => { createForm.resetFields(); setCreateModalVisible(true); }}>新建 Offer</Button>} />
 
       {stats && (
         <Row gutter={16} style={{ marginBottom: 24 }}>
@@ -540,42 +539,11 @@ const OffersList: React.FC = () => {
         </Row>
       )}
 
-      <Card>
-        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-          <Space wrap>
-            <Input.Search
-              placeholder="搜索候选人/岗位"
-              allowClear
-              style={{ width: 200 }}
-              onSearch={setSearchText}
-              onChange={(e) => !e.target.value && setSearchText('')}
-            />
-            <Select
-              placeholder="状态筛选"
-              allowClear
-              style={{ width: 120 }}
-              onChange={setStatusFilter}
-            >
-              {Object.entries(statusConfig).map(([key, value]) => (
-                <Option key={key} value={key}>{value.text}</Option>
-              ))}
-            </Select>
-            <Button icon={<ReloadOutlined />} onClick={() => { fetchOffers(); fetchStats(); }}>刷新</Button>
-            {selectedRowKeys.length > 0 && (
-              <>
-                <span style={{ color: '#64748B', lineHeight: '32px' }}>已选 {selectedRowKeys.length} 项</span>
-                <Button type="primary" onClick={handleBatchSend}>批量发送</Button>
-                <Button danger onClick={handleBatchDelete}>批量删除</Button>
-                <Button onClick={() => setSelectedRowKeys([])}>取消选择</Button>
-              </>
-            )}
-          </Space>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => {
-            createForm.resetFields();
-            setCreateModalVisible(true);
-          }}>新建Offer</Button>
-        </div>
-
+      <FilterBar actions={<Space wrap><Button icon={<ReloadOutlined />} onClick={() => { fetchOffers(); fetchStats(); }}>刷新</Button>{selectedRowKeys.length > 0 && <><span className="muted-text">已选 {selectedRowKeys.length} 项</span><Button type="primary" onClick={handleBatchSend}>批量发送</Button><Button danger onClick={handleBatchDelete}>批量删除</Button><Button onClick={() => setSelectedRowKeys([])}>取消选择</Button></>}</Space>}>
+        <Input.Search placeholder="搜索候选人/岗位" allowClear style={{ width: 240 }} onSearch={setSearchText} onChange={(e) => !e.target.value && setSearchText('')} />
+        <Select placeholder="状态筛选" allowClear style={{ width: 140 }} onChange={setStatusFilter}>{Object.entries(statusConfig).map(([key, value]) => <Option key={key} value={key}>{value.text}</Option>)}</Select>
+      </FilterBar>
+      <div className="table-shell">
         <Table
           columns={columns}
           dataSource={offers}
@@ -593,7 +561,7 @@ const OffersList: React.FC = () => {
             onChange: (page, pageSize) => setPagination(prev => ({ ...prev, current: page, pageSize })),
           }}
         />
-      </Card>
+      </div>
 
       <Modal
         title="新建Offer"

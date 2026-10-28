@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, message, Tag, Modal, Form, Input, Select, Upload, Tooltip, Typography, Drawer, Divider, Spin } from 'antd';
 import { PlusOutlined, UploadOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, FileWordOutlined, FileTextOutlined } from '@ant-design/icons';
 import request from '../../utils/request';
+import PageHeader from '../../components/ui/PageHeader';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import mammoth from 'mammoth';
@@ -432,34 +433,24 @@ const QuestionBanksList: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <div>
-          <Title level={2} style={{ margin: 0 }}>题库管理</Title>
-          <Text type="secondary">管理面试题目和知识库</Text>
-        </div>
-        <Space>
-          {selectedRowKeys.length > 0 && (
-            <>
-              <span style={{ color: '#64748B' }}>已选 {selectedRowKeys.length} 项</span>
-              <Button danger onClick={handleBatchDelete}>批量删除</Button>
-              <Button onClick={() => setSelectedRowKeys([])}>取消选择</Button>
-            </>
-          )}
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} size="large" style={{ borderRadius: '8px' }}>上传题库</Button>
-        </Space>
-      </div>
+      <PageHeader
+        title="题库管理"
+        description="集中管理面试题目和知识库，为不同岗位提供标准化面试内容。"
+        extra={<Space>{selectedRowKeys.length > 0 && <><span className="muted-text">已选 {selectedRowKeys.length} 项</span><Button danger onClick={handleBatchDelete}>批量删除</Button><Button onClick={() => setSelectedRowKeys([])}>取消选择</Button></>}<Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} size="large">上传题库</Button></Space>}
+      />
       
-      <Table 
+      <div className="table-shell"><Table
         columns={columns} 
         dataSource={data} 
         loading={loading} 
         rowKey="id" 
+        scroll={{ x: 900 }}
         pagination={{ pageSize: 10, showSizeChanger: true }}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys,
         }}
-      />
+      /></div>
 
       <Modal
         title="上传题库"

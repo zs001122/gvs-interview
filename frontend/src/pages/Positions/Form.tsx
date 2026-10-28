@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Card, message, Select, Typography } from 'antd';
+import { Form, Input, Button, Card, message, Select } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RobotOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { RobotOutlined } from '@ant-design/icons';
 import request from '../../utils/request';
 import JDGeneratorModal from '../../components/JDGeneratorModal';
-
-const { Title, Text } = Typography;
+import PageHeader from '../../components/ui/PageHeader';
 
 const PositionForm: React.FC = () => {
   const [form] = Form.useForm();
@@ -80,14 +79,12 @@ const PositionForm: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 24 }}>
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => navigate('/positions')}>
-          返回列表
-        </Button>
-      </div>
-      
-      <Card>
-        <Title level={4} style={{ marginBottom: 24 }}>{id ? '编辑岗位' : '新增岗位'}</Title>
+      <PageHeader
+        title={id ? '编辑岗位' : '创建新岗位'}
+        description="完善岗位信息与人才要求，发布后即可开始接收候选人简历。"
+        onBack={() => navigate('/positions')}
+      />
+      <Card className="surface-panel position-form-card">
         <Form
           form={form}
           layout="vertical"
@@ -177,7 +174,7 @@ const PositionForm: React.FC = () => {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <Text strong>岗位职责</Text>
+            <span className="form-label-strong">岗位职责</span>
             <Button 
               type="link" 
               icon={<RobotOutlined />} 
@@ -211,14 +208,10 @@ const PositionForm: React.FC = () => {
             </Select>
           </Form.Item>
 
-          <Form.Item style={{ marginTop: 32 }}>
-            <Button type="primary" htmlType="submit" loading={loading} size="large">
-              提交
-            </Button>
-            <Button style={{ marginLeft: 12 }} onClick={() => navigate('/positions')} size="large">
-              取消
-            </Button>
-          </Form.Item>
+          <div className="form-actions">
+            <Button onClick={() => navigate('/positions')} size="large">取消</Button>
+            <Button type="primary" htmlType="submit" loading={loading} size="large">{id ? '保存修改' : '创建岗位'}</Button>
+          </div>
         </Form>
       </Card>
 

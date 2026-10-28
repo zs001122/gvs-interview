@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Select, Input, Space } from 'antd';
+import { Form, Input, Select } from 'antd';
 
 const REJECT_REASONS = [
   { value: 'skills_mismatch', label: '技能不符合要求' },
@@ -17,43 +17,15 @@ interface RejectReasonSelectorProps {
   showDetail?: boolean;
 }
 
-const RejectReasonSelector: React.FC<RejectReasonSelectorProps> = ({
-  form,
-  layout = 'vertical',
-  showDetail = true
-}) => {
-  return (
-    <Space direction="vertical" style={{ width: '100%' }} size="middle">
-      <Form.Item
-        name="reject_reason_category"
-        label="淘汰原因"
-        rules={[{ required: true, message: '请选择淘汰原因' }]}
-      >
-        <Select placeholder="请选择淘汰原因" size="large">
-          {REJECT_REASONS.map((reason) => (
-            <Select.Option key={reason.value} value={reason.value}>
-              {reason.label}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-
-      {showDetail && (
-        <Form.Item
-          name="reject_reason_detail"
-          label="详细说明"
-        >
-          <Input.TextArea
-            placeholder="请输入详细说明（可选）"
-            rows={3}
-            maxLength={500}
-            showCount
-          />
-        </Form.Item>
-      )}
-    </Space>
-  );
-};
+const RejectReasonSelector: React.FC<RejectReasonSelectorProps> = ({ showDetail = true }) => (
+  <div className="reject-reason-panel">
+    <p>请选择最符合实际情况的原因，便于后续分析招聘转化与人才匹配质量。</p>
+    <Form.Item name="reject_reason_category" label="淘汰原因" rules={[{ required: true, message: '请选择淘汰原因' }]}>
+      <Select placeholder="请选择淘汰原因" size="large" options={REJECT_REASONS} />
+    </Form.Item>
+    {showDetail && <Form.Item name="reject_reason_detail" label="详细说明"><Input.TextArea placeholder="补充具体原因或需要团队关注的信息（可选）" rows={3} maxLength={500} showCount /></Form.Item>}
+  </div>
+);
 
 export default RejectReasonSelector;
 export { REJECT_REASONS };

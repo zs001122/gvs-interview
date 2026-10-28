@@ -3,7 +3,6 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { python } from '@codemirror/lang-python';
 import { java } from '@codemirror/lang-java';
-import { oneDark } from '@codemirror/theme-one-dark';
 
 type Language = 'javascript' | 'python' | 'java';
 
@@ -22,23 +21,18 @@ const getExtensions = (language?: string) => {
   return [javascript({ typescript: false, jsx: false })];
 };
 
-const CodeEditor: React.FC<Props> = ({ value, onChange, language, height = 360, readOnly }) => {
-  return (
+const CodeEditor: React.FC<Props> = ({ value, onChange, language, height = 360, readOnly }) => (
+  <div className="code-editor-shell">
     <CodeMirror
       value={value || ''}
       height={typeof height === 'number' ? `${height}px` : height}
-      theme={oneDark}
+      theme="light"
       editable={!readOnly}
       extensions={getExtensions(language)}
-      basicSetup={{
-        foldGutter: true,
-        lineNumbers: true,
-        highlightActiveLine: true,
-        highlightSelectionMatches: true,
-      }}
+      basicSetup={{ foldGutter: true, lineNumbers: true, highlightActiveLine: true, highlightSelectionMatches: true }}
       onChange={(v) => onChange?.(v)}
     />
-  );
-};
+  </div>
+);
 
 export default CodeEditor;

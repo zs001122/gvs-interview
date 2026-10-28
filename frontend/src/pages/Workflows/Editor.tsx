@@ -697,8 +697,8 @@ const WorkflowEditor: React.FC = () => {
   }
 
   return (
-    <div style={{ height: 'calc(100vh - 150px)', display: 'flex' }}>
-      <div style={{ width: 240, borderRight: '1px solid #f0f0f0', overflow: 'auto', padding: 16 }}>
+    <div className="workflow-editor">
+      <div className="workflow-node-library">
         <Title level={5}>节点库</Title>
         <Text type="secondary" style={{ fontSize: 12 }}>拖拽节点到画布</Text>
         
@@ -739,14 +739,8 @@ const WorkflowEditor: React.FC = () => {
         ))}
       </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{
-          padding: '12px 16px',
-          borderBottom: '1px solid #f0f0f0',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <div className="workflow-canvas">
+        <div className="workflow-toolbar">
           <Space>
             <Button onClick={() => navigate('/workflows')}>返回</Button>
             <Title level={4} style={{ margin: 0 }}>{workflow?.name}</Title>

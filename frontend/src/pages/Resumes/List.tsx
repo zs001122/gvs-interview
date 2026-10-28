@@ -3,8 +3,9 @@ import { Table, Button, Space, message, Tag, Modal, Tooltip, Typography, Form, S
 import { PlusOutlined, EyeOutlined, TeamOutlined, DeleteOutlined, UploadOutlined, ReloadOutlined, CloseCircleOutlined, SearchOutlined, UndoOutlined, SolutionOutlined, SyncOutlined } from '@ant-design/icons';
 import request from '../../utils/request';
 import { useNavigate } from 'react-router-dom';
+import PageHeader from '../../components/ui/PageHeader';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -609,31 +610,11 @@ const ResumesList: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <div>
-          <Title level={2} style={{ margin: 0, fontWeight: 700 }}>
-            {user?.role === 'interviewer' ? '我的待评审' : '简历管理'}
-          </Title>
-          <Text type="secondary">
-            {user?.role === 'interviewer' ? '被指派给您的待评审简历' : '管理候选人简历及面试流程'}
-          </Text>
-        </div>
-        <Space>
-          {user?.role !== 'interviewer' && (
-            <>
-              <Button icon={pollingEnabled ? <SyncOutlined spin /> : <ReloadOutlined />} onClick={() => fetchResumes()}>
-                {pollingEnabled ? '解析中...' : '刷新'}
-              </Button>
-              <Button type="primary" icon={<PlusOutlined />} onClick={handleUploadClick} size="large" style={{ borderRadius: '8px' }}>上传简历</Button>
-            </>
-          )}
-          {user?.role === 'interviewer' && (
-            <Button icon={pollingEnabled ? <SyncOutlined spin /> : <ReloadOutlined />} onClick={() => fetchResumes()}>
-              {pollingEnabled ? '解析中...' : '刷新'}
-            </Button>
-          )}
-        </Space>
-      </div>
+      <PageHeader
+        title={user?.role === 'interviewer' ? '我的待评审' : '候选人管理'}
+        description={user?.role === 'interviewer' ? '查看指派给您的候选人资料并完成评审。' : '从简历解析、AI 初筛到协同评审，持续跟踪每位候选人的招聘进度。'}
+        extra={<Space><Button icon={pollingEnabled ? <SyncOutlined spin /> : <ReloadOutlined />} onClick={() => fetchResumes()}>{pollingEnabled ? '解析中' : '刷新'}</Button>{user?.role !== 'interviewer' && <Button type="primary" icon={<PlusOutlined />} onClick={handleUploadClick} size="large">上传简历</Button>}</Space>}
+      />
 
       {user?.role !== 'interviewer' && (
         <Card style={{ marginBottom: 24, borderRadius: '8px' }} bodyStyle={{ padding: '24px' }}>
@@ -698,17 +679,18 @@ const ResumesList: React.FC = () => {
         </Card>
       )}
 
-      <Table 
+      <div className="table-shell"><Table
         columns={columns} 
         dataSource={data} 
         loading={loading} 
         rowKey="id" 
+        scroll={{ x: 1050 }}
         pagination={{ pageSize: 10, showSizeChanger: true }}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys,
         }}
-      />
+      /></div>
 
       {/* Upload Modal */}
       <Modal

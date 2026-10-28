@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card, Table, Button, Space, Modal, Form, Input, InputNumber, Select, 
+  Table, Button, Space, Modal, Form, Input, InputNumber, Select,
   message, Popconfirm, Tag, Typography, Row, Col, Switch, Tooltip
 } from 'antd';
 import {
   PlusOutlined, EditOutlined, DeleteOutlined, FileTextOutlined
 } from '@ant-design/icons';
 import request from '../../utils/request';
+import PageHeader from '../../components/ui/PageHeader';
 import dayjs from 'dayjs';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -241,26 +242,10 @@ const OfferTemplates: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 24 }}>
-        <Title level={2} style={{ margin: 0 }}>Offer模板管理</Title>
-        <Text type="secondary">管理Offer模板，新建Offer时可自动填充</Text>
-      </div>
+      <PageHeader title="Offer 模板" description="维护标准化录用条款和薪资结构，让 Offer 创建更高效、一致。" extra={<Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>新建模板</Button>} />
 
-      <Card>
-        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
-          <Space>
-            <Text>共 {templates.length} 个模板</Text>
-            {selectedRowKeys.length > 0 && (
-              <>
-                <span style={{ lineHeight: '32px' }}>已选 {selectedRowKeys.length} 项</span>
-                <Button danger onClick={handleBatchDelete}>批量删除</Button>
-                <Button onClick={() => setSelectedRowKeys([])}>取消选择</Button>
-              </>
-            )}
-          </Space>
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>新建模板</Button>
-        </div>
-
+      <div className="action-bar template-action-bar"><Space wrap><Text>共 {templates.length} 个模板</Text>{selectedRowKeys.length > 0 && <><span>已选 {selectedRowKeys.length} 项</span><Button danger onClick={handleBatchDelete}>批量删除</Button><Button onClick={() => setSelectedRowKeys([])}>取消选择</Button></>}</Space></div>
+      <div className="table-shell">
         <Table
           columns={columns}
           dataSource={templates}
@@ -272,7 +257,7 @@ const OfferTemplates: React.FC = () => {
             onChange: (keys) => setSelectedRowKeys(keys),
           }}
         />
-      </Card>
+      </div>
 
       <Modal
         title={editingTemplate ? '编辑模板' : '新建模板'}

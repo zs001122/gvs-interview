@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Input, Button, message, Spin, Typography, Card, Divider, Space } from 'antd';
-import { SendOutlined, CheckOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SendOutlined, CheckOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 const { TextArea } = Input;
 
 interface JDGeneratorModalProps {
@@ -235,7 +235,7 @@ const JDGeneratorModal: React.FC<JDGeneratorModalProps> = ({
     <Modal
       title={
         <Space>
-          <span>AI 生成岗位描述</span>
+          <span className="ai-modal-title"><RobotOutlined /> AI 生成岗位描述</span>
           {generating && <Spin size="small" />}
         </Space>
       }
@@ -255,7 +255,7 @@ const JDGeneratorModal: React.FC<JDGeneratorModalProps> = ({
         </Button>,
       ]}
     >
-      <div style={{ maxHeight: '70vh', overflow: 'auto' }}>
+      <div className="jd-generator-content">
         {generating && !generated && (
           <Card style={{ marginBottom: 16, background: '#f8fafc' }}>
             <div style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: 13 }}>
